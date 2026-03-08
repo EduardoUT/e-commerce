@@ -1,6 +1,6 @@
 package io.github.eduardout.e_commerce.entity;
 
-import io.github.eduardout.e_commerce.entity.data.CategoryTestDataLoader;
+import io.github.eduardout.e_commerce.entity.data.ProductCategoryTestDataLoader;
 import io.github.eduardout.e_commerce.entity.data.ProductTestDataLoader;
 import io.github.eduardout.e_commerce.entity.data.ShoppingCartTestDataLoader;
 import io.github.eduardout.e_commerce.entity.data.builder.CartItems;
@@ -45,10 +45,10 @@ class CartItemTest {
     }
 
     private void setUpShoppingCart() {
-        CategoryTestDataLoader categoryTestDataLoader = new CategoryTestDataLoader(productCategoryRepository);
+        ProductCategoryTestDataLoader productCategoryTestDataLoader = new ProductCategoryTestDataLoader(productCategoryRepository);
         ProductTestDataLoader productTestDataLoader = new ProductTestDataLoader(
                 productRepository,
-                categoryTestDataLoader.setUp()
+                productCategoryTestDataLoader.setUp()
         );
 
         Set<Product> products = productTestDataLoader.setUp();

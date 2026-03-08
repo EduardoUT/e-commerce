@@ -1,6 +1,6 @@
 package io.github.eduardout.e_commerce.entity;
 
-import io.github.eduardout.e_commerce.entity.data.CategoryTestDataLoader;
+import io.github.eduardout.e_commerce.entity.data.ProductCategoryTestDataLoader;
 import io.github.eduardout.e_commerce.entity.data.builder.Products;
 import io.github.eduardout.e_commerce.repository.ProductCategoryRepository;
 import io.github.eduardout.e_commerce.repository.ProductRepository;
@@ -24,8 +24,8 @@ class ProductTest {
     private ProductCategory actualProductCategory;
 
     private void setUpProductCategory() {
-        CategoryTestDataLoader categoryTestDataLoader = new CategoryTestDataLoader(productCategoryRepository);
-        actualProductCategory = categoryTestDataLoader.setUp()
+        ProductCategoryTestDataLoader productCategoryTestDataLoader = new ProductCategoryTestDataLoader(productCategoryRepository);
+        actualProductCategory = productCategoryTestDataLoader.setUp()
                 .stream()
                 .findFirst()
                 .orElseThrow();

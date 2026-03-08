@@ -55,8 +55,8 @@ class PurchaseItemTest {
     }
 
     private void setUpProducts() {
-        CategoryTestDataLoader categoryTestDataLoader = new CategoryTestDataLoader(productCategoryRepository);
-        ProductTestDataLoader productTestDataLoader = new ProductTestDataLoader(productRepository, categoryTestDataLoader.setUp());
+        ProductCategoryTestDataLoader productCategoryTestDataLoader = new ProductCategoryTestDataLoader(productCategoryRepository);
+        ProductTestDataLoader productTestDataLoader = new ProductTestDataLoader(productRepository, productCategoryTestDataLoader.setUp());
         products = productTestDataLoader.setUp();
     }
 

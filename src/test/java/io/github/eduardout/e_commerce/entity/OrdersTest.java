@@ -72,9 +72,9 @@ class OrdersTest {
     }
 
     private void setUpProducts() {
-        CategoryTestDataLoader categoryTestDataLoader = new CategoryTestDataLoader(productCategoryRepository);
+        ProductCategoryTestDataLoader productCategoryTestDataLoader = new ProductCategoryTestDataLoader(productCategoryRepository);
         ProductTestDataLoader productTestDataLoader = new ProductTestDataLoader(
-                productRepository, categoryTestDataLoader.setUp()
+                productRepository, productCategoryTestDataLoader.setUp()
         );
         products = productTestDataLoader.setUp();
     }
