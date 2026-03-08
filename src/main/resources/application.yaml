@@ -7,23 +7,10 @@ spring:
   datasource:
     generate-unique-name: false
     name: e_commerce_db
-    url: jdbc:mysql://localhost/e-commerce
-    username: e-user
-    password:
+    url: ${E_COMMERCE_DB_URL}
+    username: ${E_COMMERCE_DB_USERNAME}
+    password: ${E_COMMERCE_DB_PASSWORD}
   jpa:
     properties:
-      show-sql: false
-    hibernate:
-      ddl-auto: create
----
-#============================================================================#
-# Dev profile configuration properties
-#============================================================================#
-  config:
-    activate:
-      on-profile: dev
-  jpa:
-    show-sql: true
-  logging:
-    root:
-      level: DEBUG
+      hibernate:
+        globally_quoted_identifiers: true
