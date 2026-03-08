@@ -151,7 +151,7 @@ class OrderItemTest {
     }
 
     @Nested
-    class TestOrderItemCrud {
+    class TestCrudOperations {
         @Test
         void testSaveOrderItem() {
             setUpCustomer();
