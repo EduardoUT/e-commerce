@@ -17,7 +17,7 @@ import static io.github.eduardout.e_commerce.util.Validate.collectionNonNullAndN
  * @param <T> Type of the test entities.
  */
 public abstract class TestDataLoader<T extends Identifiable<?>> {
-    
+
     @Getter
     private Set<T> transientEntities = new HashSet<>();
 
