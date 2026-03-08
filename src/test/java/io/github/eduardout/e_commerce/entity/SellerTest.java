@@ -3,7 +3,6 @@ package io.github.eduardout.e_commerce.entity;
 import io.github.eduardout.e_commerce.entity.data.SellerTestDataLoader;
 import io.github.eduardout.e_commerce.entity.data.builder.Sellers;
 import io.github.eduardout.e_commerce.repository.SellerRepository;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
@@ -15,7 +14,6 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@Slf4j
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class SellerTest {
