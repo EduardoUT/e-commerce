@@ -119,7 +119,7 @@ class CartItemTest {
     }
 
     @Nested
-    class TestCartItemCrud {
+    class TestCrudOperations {
         @Test
         void testSaveCartItem() {
             ShoppingCart actualShoppingCart = shoppingCart;
