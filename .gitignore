@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Project properties ###
+/src/main/resources/application-dev.yaml
+/src/test/resources/application-test.yaml
