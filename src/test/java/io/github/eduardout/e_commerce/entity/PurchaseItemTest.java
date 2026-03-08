@@ -143,7 +143,7 @@ class PurchaseItemTest {
     }
 
     @Nested
-    class TestPurchaseItemCrud {
+    class TestCrudOperations {
         @Test
         void testSavePurchaseItem() {
             Purchase actualPurchase = findFirstPurchase(purchases);
