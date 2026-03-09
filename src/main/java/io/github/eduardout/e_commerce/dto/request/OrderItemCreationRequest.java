@@ -12,7 +12,12 @@ public record OrderItemCreationRequest(
         @Max(Integer.MAX_VALUE)
         @Size(min = 1, message = "Quantity out of range")
         Integer quantity,
-        @NotBlank(message = "Line amount is mandatory")
+        @NotNull(message = "Line amount is mandatory")
+        @Digits(integer = 7, fraction = 2, message = """
+                Maximum limit of integer digits must be less or equal to 7 and decimal are 2. 
+                """)
+        @DecimalMin(value = "0.00", message = "Line amount must not be negative")
+        @DecimalMax(value = "99999999.99", message = "Line amount exceded maximum limit")
         BigDecimal lineAmount
 ) {
 }
