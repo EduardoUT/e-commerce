@@ -15,7 +15,7 @@ public record PurchaseItemCreationRequest(
                 Maximum limit of integer digits must be less or equal to 7 and decimal are 2. 
                 """)
         @DecimalMin(value = "0.00", message = "Line amount must not be negative")
-        @DecimalMax(value = "9999999.99", message = "Line amount exceded maximum limit")
+        @DecimalMax(value = "99999999.99", message = "Line amount exceded maximum limit")
         BigDecimal lineAmount
 ) {
 }
