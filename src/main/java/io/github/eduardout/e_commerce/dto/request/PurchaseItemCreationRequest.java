@@ -12,7 +12,7 @@ public record PurchaseItemCreationRequest(
         Integer quantity,
         @NotNull(message = "Line amount is mandatory")
         @Digits(integer = 7, fraction = 2, message = """
-                Maximum limit of integer digits must be less or equal to 7 and decimal are 2. 
+                Maximum limit of integer digits must be less or equal to 7 and decimal are 2.
                 """)
         @DecimalMin(value = "0.00", message = "Line amount must not be negative")
         @DecimalMax(value = "99999999.99", message = "Line amount exceded maximum limit")
