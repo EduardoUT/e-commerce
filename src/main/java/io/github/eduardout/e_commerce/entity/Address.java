@@ -41,8 +41,13 @@ public class Address {
     private Integer internalNumber;
 
     @Builder(builderMethodName = "anAddress", setterPrefix = "with")
-    private Address(String street, String neighborhood, String municipality, String state, String zipCode,
-                   Integer externalNumber, Integer internalNumber) {
+    private Address(String street,
+                    String neighborhood,
+                    String municipality,
+                    String state,
+                    String zipCode,
+                    Integer externalNumber,
+                    Integer internalNumber) {
         this.street = street;
         this.neighborhood = neighborhood;
         this.municipality = municipality;
