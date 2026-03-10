@@ -46,8 +46,16 @@ public class Payment implements Identifiable<Long> {
     private LocalDateTime createdAt;
 
     @Builder(builderMethodName = "aPayment", setterPrefix = "with")
-    private Payment(Customer customer, PaymentStatus paymentStatus, String externalId, String gatewayName,
+    private Payment(Customer customer,
+                    PaymentStatus paymentStatus,
+                    String externalId,
+                    String gatewayName,
                     BigDecimal amount) {
-        this(null, customer, paymentStatus, externalId, gatewayName, amount, null);
+
+        this.customer = customer;
+        this.paymentStatus = paymentStatus;
+        this.externalId = externalId;
+        this.gatewayName = gatewayName;
+        this.amount = amount;
     }
 }
