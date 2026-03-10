@@ -36,8 +36,14 @@ public class User implements UserDetails, Identifiable<Long> {
     private String email;
 
     @Builder(builderMethodName = "anUser", setterPrefix = "with")
-    private User(String username, String password, String role, String email) {
-        this(null, username, password, role, email);
+    private User(String username,
+                 String password,
+                 String role,
+                 String email) {
+        this.username = username;
+        this.password = password;
+        this.role = role;
+        this.email = email;
     }
 
     @NullMarked

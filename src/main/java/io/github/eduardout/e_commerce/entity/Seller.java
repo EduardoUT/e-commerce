@@ -35,7 +35,13 @@ public class Seller implements Identifiable<Long> {
     private FiscalData fiscalData;
 
     @Builder(builderMethodName = "aSeller", setterPrefix = "with")
-    private Seller(User user, PersonalData personalData, Address address, FiscalData fiscalData) {
-        this(null, user, personalData, address, fiscalData);
+    private Seller(User user,
+                   PersonalData personalData,
+                   Address address,
+                   FiscalData fiscalData) {
+        this.user = user;
+        this.personalData = personalData;
+        this.address = address;
+        this.fiscalData = fiscalData;
     }
 }
