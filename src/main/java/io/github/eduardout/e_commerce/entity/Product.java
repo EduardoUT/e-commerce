@@ -56,7 +56,13 @@ public class Product implements Identifiable<Long> {
     private LocalDateTime updatedAt;
 
     @Builder(builderMethodName = "aProduct", setterPrefix = "with")
-    private Product(String name, String description, BigDecimal discountPercentage, BigDecimal discountAmount, BigDecimal sellPrice, BigDecimal purchasePrice, Integer stock,
+    private Product(String name,
+                    String description,
+                    BigDecimal discountPercentage,
+                    BigDecimal discountAmount,
+                    BigDecimal sellPrice,
+                    BigDecimal purchasePrice,
+                    Integer stock,
                     ProductCategory productCategory) {
         this.name = name;
         this.description = description;
