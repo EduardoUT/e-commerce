@@ -26,8 +26,8 @@ public class Product implements Identifiable<Long> {
     private String description;
     @Getter
     @Setter
-    @Column(name = "discount_percentage", nullable = false)
-    private BigDecimal discountPercentage;
+    @Column(name = "discount_percentage", options = "unsigned not null")
+    private Byte discountPercentage;
     @Getter
     @Setter
     @Column(name = "discount_amount", nullable = false)
@@ -58,7 +58,7 @@ public class Product implements Identifiable<Long> {
     @Builder(builderMethodName = "aProduct", setterPrefix = "with")
     private Product(String name,
                     String description,
-                    BigDecimal discountPercentage,
+                    Byte discountPercentage,
                     BigDecimal discountAmount,
                     BigDecimal sellPrice,
                     BigDecimal purchasePrice,
