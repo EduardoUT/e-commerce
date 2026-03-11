@@ -1,7 +1,7 @@
 package io.github.eduardout.e_commerce.dto.response;
 
 public record ProductCategoryResponse(
-        Integer categoryId,
+        Integer id,
         String name,
         String description
 ) {
