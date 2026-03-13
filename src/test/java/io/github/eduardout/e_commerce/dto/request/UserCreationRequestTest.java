@@ -1,8 +1,9 @@
 package io.github.eduardout.e_commerce.dto.request;
 
-import io.github.eduardout.e_commerce.util.ConstraintViolationAssertion;
+import io.github.eduardout.e_commerce.dto.ConstraintViolationAssertion;
+import io.github.eduardout.e_commerce.entity.User;
+import io.github.eduardout.e_commerce.entity.data.builder.Users;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -13,241 +14,199 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserCreationRequestTest {
-
-    private static final String USERNAME_TEST = "usernameTest";
-    private static final String ROLE_TEST = "USER";
-    private static final String PASSWORD_TEST = "t3wHGNrL7ZyFuv@";
-    private static final String EMAIL_TEST = "username_test@gmail.com";
-    private ConstraintViolationAssertion constraintViolationAssertion;
-    private final String expectedPropertyPathOnUsername = "username";
-    private final String expectedMessageOnPassword = """
-            Password must commit the following requirements:
-            - Must be at least 15 characters and max 20.
-            - At least 1 lowercase and 1 uppercase character.
-            - At least 1 numeric digit.
-            - At least 1 special character.
-            """;
-    private final String expectedPropertyPathOnPassword = "password";
+    private final ConstraintViolationAssertion constraintViolationAssertion = new ConstraintViolationAssertion();
+    private User userTest;
 
     @BeforeEach
     void setUp() {
-        constraintViolationAssertion = new ConstraintViolationAssertion();
+        userTest = Users.anUser().build();
     }
 
-    @DisplayName("Should test  when username is blank")
+    static Stream<String> streamOfInvalidNotBlank() {
+        return Stream.of(null, "");
+    }
+
     @Test
-    void testInvalidUsername() {
-        constraintViolationAssertion.assertConstraintViolations(
-                "Username is mandatory", expectedPropertyPathOnUsername,
+    void testValidUserCreationRequest() {
+        constraintViolationAssertion.assertEmptyConstraintViolations(
                 new UserCreationRequest(
-                        "",
-                        ROLE_TEST,
-                        PASSWORD_TEST,
-                        PASSWORD_TEST,
-                        EMAIL_TEST
+                        userTest.getUsername(),
+                        userTest.getRole(),
+                        userTest.getPassword(),
+                        userTest.getPassword(),
+                        userTest.getEmail()
                 )
         );
     }
 
-    @DisplayName("Should test  when username is out of range")
     @Test
-    void testInvalidUsernameMinMaxSize() {
-        String expectedMessage = "Username must be between 4 and 50 characters size";
-        constraintViolationAssertion.assertConstraintViolations(
-                expectedMessage, expectedPropertyPathOnUsername,
+    void testNullUsername() {
+        constraintViolationAssertion.assertConstraintViolation(
+                "Username is mandatory",
+                "username",
                 new UserCreationRequest(
-                        "lodemgardenlodemgardenlodemgardenlodemgardenlodemgarden",
-                        ROLE_TEST,
-                        PASSWORD_TEST,
-                        PASSWORD_TEST,
-                        EMAIL_TEST
-                )
-        );
-
-        constraintViolationAssertion.assertConstraintViolations(
-                expectedMessage, expectedPropertyPathOnUsername,
-                new UserCreationRequest(
-                        "u",
-                        ROLE_TEST,
-                        PASSWORD_TEST,
-                        PASSWORD_TEST,
-                        EMAIL_TEST
+                        null,
+                        userTest.getRole(),
+                        userTest.getPassword(),
+                        userTest.getPassword(),
+                        userTest.getEmail()
                 )
         );
     }
 
+    @ParameterizedTest
+    @MethodSource("streamOfInvalidUsernameSize")
+    void testSizeUsername(String username) {
+        constraintViolationAssertion.assertConstraintViolation(
+                "Username must be between 4 and 50 characters size",
+                "username",
+                new UserCreationRequest(
+                        username,
+                        userTest.getRole(),
+                        userTest.getPassword(),
+                        userTest.getPassword(),
+                        userTest.getEmail()
+                )
+        );
+    }
 
-    @DisplayName("Should test when role is blank")
-    @Test
-    void testInvalidRole() {
-        constraintViolationAssertion.assertConstraintViolations(
+    static Stream<String> streamOfInvalidUsernameSize() {
+        return Stream.of("lodemgardenlodemgardenlodemgardenlodemgardenlodemgarden", "u", "", "pas");
+    }
+
+    @ParameterizedTest
+    @MethodSource("streamOfInvalidNotBlank")
+    void testNotBlankRole(String role) {
+        constraintViolationAssertion.assertConstraintViolation(
                 "Role is mandatory", "role",
                 new UserCreationRequest(
-                        USERNAME_TEST,
-                        "",
-                        PASSWORD_TEST,
-                        PASSWORD_TEST,
-                        EMAIL_TEST
+                        userTest.getUsername(),
+                        role,
+                        userTest.getPassword(),
+                        userTest.getPassword(),
+                        userTest.getEmail()
                 )
         );
     }
 
-    @DisplayName("Should test invalid password when out of range")
-    @Test
-    void testInvalidPasswordMinMaxSize() {
-        // When password length is less than 15
-        constraintViolationAssertion.assertConstraintViolations(
-                expectedMessageOnPassword, expectedPropertyPathOnPassword,
+    @ParameterizedTest
+    @MethodSource("streamOfInvalidPasswords")
+    void testInvalidPatternPassword(String password) {
+        constraintViolationAssertion.assertConstraintViolation(
+                """
+                        Password must commit the following requirements:
+                        - Must be at least 15 characters and max 20.
+                        - At least 1 lowercase and 1 uppercase character.
+                        - At least 1 numeric digit.
+                        - At least 1 special character.
+                        """,
+                "password",
                 new UserCreationRequest(
-                        USERNAME_TEST,
-                        ROLE_TEST,
-                        "t3wHGNrL7ZyFu",
-                        "t3wHGNrL7ZyFu",
-                        EMAIL_TEST
-                )
-        );
-
-        // When password length is greater than 20
-        constraintViolationAssertion.assertConstraintViolations(
-                expectedMessageOnPassword, expectedPropertyPathOnPassword,
-                new UserCreationRequest(
-                        USERNAME_TEST,
-                        ROLE_TEST,
-                        "%P@FuA4z!pKrQZY8k4&#t",
-                        "%P@FuA4z!pKrQZY8k4&#t",
-                        EMAIL_TEST
+                        userTest.getUsername(),
+                        userTest.getRole(),
+                        password,
+                        password,
+                        userTest.getEmail()
                 )
         );
     }
 
-    @DisplayName("Should test invalid password when don't have at least 1 lower or upper case character")
-    @Test
-    void testInvalidPasswordUpperAndLowerCase() {
-        //When password don't have at least 1 lower case character
-        constraintViolationAssertion.assertConstraintViolations(
-                expectedMessageOnPassword, expectedPropertyPathOnPassword,
-                new UserCreationRequest(
-                        USERNAME_TEST,
-                        ROLE_TEST,
-                        "AWCDGS@Y@AY46B%",
-                        "AWCDGS@Y@AY46B%",
-                        EMAIL_TEST
-                )
-        );
-
-        //When password don't have at least 1 upper case character
-        constraintViolationAssertion.assertConstraintViolations(
-                expectedMessageOnPassword, expectedPropertyPathOnPassword,
-                new UserCreationRequest(
-                        USERNAME_TEST,
-                        ROLE_TEST,
-                        "%gkvjc#@9qejn2a",
-                        "%gkvjc#@9qejn2a",
-                        EMAIL_TEST
-                )
-        );
-    }
-
-    @DisplayName("Should test invalid password when don't have at least one numeric digit")
-    @Test
-    void testInvalidPasswordNumericDigit() {
-        constraintViolationAssertion.assertConstraintViolations(
-                expectedMessageOnPassword, expectedPropertyPathOnPassword,
-                new UserCreationRequest(
-                        USERNAME_TEST,
-                        ROLE_TEST,
-                        "c$ZdDoCM!okWwUz",
-                        "c$ZdDoCM!okWwUz",
-                        EMAIL_TEST
-                )
-        );
-    }
-
-    @DisplayName("Should test invalid password when don't have at least one special character")
-    @Test
-    void testInvalidPasswordSpecialCharacter() {
-        constraintViolationAssertion.assertConstraintViolations(
-                expectedMessageOnPassword, expectedPropertyPathOnPassword,
-                new UserCreationRequest(
-                        USERNAME_TEST,
-                        ROLE_TEST,
-                        "u5yUY5qcnJjoEza",
-                        "u5yUY5qcnJjoEza",
-                        EMAIL_TEST
-                )
+    static Stream<String> streamOfInvalidPasswords() {
+        return Stream.of(
+                "t3wHGNrL7ZyFu",
+                "%P@FuA4z!pKrQZY8k4&#t",
+                "AWCDGS@Y@AY46B%",
+                "%gkvjc#@9qejn2a",
+                "c$ZdDoCM!okWwUz",
+                "u5yUY5qcnJjoEza"
         );
     }
 
     @DisplayName("Should throw IllegalArgumentException when password and passwordConfirmation don't match")
     @Test
-    void testWhenPasswordNotMatch() {
+    void testPasswordMismatch() {
         IllegalArgumentException e = assertThrowsExactly(IllegalArgumentException.class, () ->
                 new UserCreationRequest(
-                        USERNAME_TEST,
-                        ROLE_TEST,
+                        userTest.getUsername(),
+                        userTest.getRole(),
                         "6N^o57ZAC!@JHJC",
                         "ovPJuKA^^M9optq",
-                        EMAIL_TEST
+                        userTest.getEmail()
                 ));
         assertEquals("Password and password confirmation don't match", e.getMessage());
     }
 
-    @DisplayName("Should test when email is invalid")
     @ParameterizedTest
-    @MethodSource(value = "invalidEmails")
-    void testInvalidEmails(UserCreationRequest userCreationRequest) {
-        String expectedMessage = """
-                 Email must commit the following requirements:
-                 - Username (before) @ must be at least 6 characters and max 30.
-                 - Domain must be max 62 characters.
-                 - Cannot contain sequential dots
-                 - Cannot contain sequential underscores
-                 - Cannot contain sequential hyphen
-                """;
-        String expectedPropertyPath = "email";
-        constraintViolationAssertion.assertConstraintViolations(expectedMessage, expectedPropertyPath, userCreationRequest);
-    }
-
-    static Stream<UserCreationRequest> invalidEmails() {
-        return Stream.of(
-                new UserCreationRequest(USERNAME_TEST, ROLE_TEST, PASSWORD_TEST, PASSWORD_TEST, "pepito+promo@empresa.net"),
-                new UserCreationRequest(USERNAME_TEST, ROLE_TEST, PASSWORD_TEST, PASSWORD_TEST, ".usuario@ejemplo.com"),
-                new UserCreationRequest(USERNAME_TEST, ROLE_TEST, PASSWORD_TEST, PASSWORD_TEST, "usuario.@ejemplo.com"),
-                new UserCreationRequest(USERNAME_TEST, ROLE_TEST, PASSWORD_TEST, PASSWORD_TEST, "usuario..prueba@ejemplo.com"),
-                new UserCreationRequest(USERNAME_TEST, ROLE_TEST, PASSWORD_TEST, PASSWORD_TEST, "usuario@-dominio.com"),
-                new UserCreationRequest(USERNAME_TEST, ROLE_TEST, PASSWORD_TEST, PASSWORD_TEST, "usuario@dominio-.com"),
-                new UserCreationRequest(USERNAME_TEST, ROLE_TEST, PASSWORD_TEST, PASSWORD_TEST, "bolt@perrito.3com"),
-                new UserCreationRequest(USERNAME_TEST, ROLE_TEST, PASSWORD_TEST, PASSWORD_TEST, "algo@dominio.123"),
-                new UserCreationRequest(USERNAME_TEST, ROLE_TEST, PASSWORD_TEST, PASSWORD_TEST, "nombre apellido@ejemplo.com"),
-                new UserCreationRequest(USERNAME_TEST, ROLE_TEST, PASSWORD_TEST, PASSWORD_TEST, "user@do..main.com"),
-                new UserCreationRequest(USERNAME_TEST, ROLE_TEST, PASSWORD_TEST, PASSWORD_TEST, "us..er@dominio.com")
+    @MethodSource("invalidEmails")
+    void testInvalidEmails(String email) {
+        constraintViolationAssertion.assertConstraintViolation(
+                """
+                         Email must commit the following requirements:
+                         - Local part (before) @ must be min 1 character and max 64
+                         - Domain part (after) @ should be min 1 character and max 64
+                         - Cannot contain sequential dots
+                         - Cannot contain sequential underscores
+                         - Cannot contain sequential hyphen
+                        """,
+                "email",
+                new UserCreationRequest(
+                        userTest.getUsername(),
+                        userTest.getRole(),
+                        userTest.getPassword(),
+                        userTest.getPassword(),
+                        email
+                )
         );
     }
 
-    @DisplayName("Should test when email is valid")
-    @ParameterizedTest
-    @MethodSource(value = "validEmails")
-    void testValidEmails(UserCreationRequest userCreationRequest) {
-        constraintViolationAssertion.assertEmptyConstraintViolations(userCreationRequest);
+    static Stream<String> invalidEmails() {
+        return Stream.of(
+                "pepito+promo@empresa.net",
+                ".usuario@ejemplo.com",
+                "usuario.@ejemplo.com",
+                "usuario..prueba@ejemplo.com",
+                "usuario@-dominio.com",
+                "usuario@dominio-.com",
+                "bolt@perrito.3com",
+                "algo@dominio.123",
+                "nombre apellido@ejemplo.com",
+                "user@do..main.com",
+                "us..er@dominio.com"
+        );
     }
 
-    static Stream<UserCreationRequest> validEmails() {
+    @ParameterizedTest
+    @MethodSource("validEmails")
+    void testValidEmails(String email) {
+        constraintViolationAssertion.assertEmptyConstraintViolations(
+                new UserCreationRequest(
+                        userTest.getUsername(),
+                        userTest.getRole(),
+                        userTest.getPassword(),
+                        userTest.getPassword(),
+                        email
+                )
+        );
+    }
+
+    static Stream<String> validEmails() {
         return Stream.of(
-                new UserCreationRequest(USERNAME_TEST, ROLE_TEST, PASSWORD_TEST, PASSWORD_TEST, "usuario@ejemplo.com"),
-                new UserCreationRequest(USERNAME_TEST, ROLE_TEST, PASSWORD_TEST, PASSWORD_TEST, "juan.perez@gmail.com"),
-                new UserCreationRequest(USERNAME_TEST, ROLE_TEST, PASSWORD_TEST, PASSWORD_TEST, "maria_lopez-23@outlook.com"),
-                new UserCreationRequest(USERNAME_TEST, ROLE_TEST, PASSWORD_TEST, PASSWORD_TEST, "nombre.apellido@ejemplo.org"),
-                new UserCreationRequest(USERNAME_TEST, ROLE_TEST, PASSWORD_TEST, PASSWORD_TEST, "pepito123@empresa.net"),
-                new UserCreationRequest(USERNAME_TEST, ROLE_TEST, PASSWORD_TEST, PASSWORD_TEST, "a12345@dominio.org"),
-                new UserCreationRequest(USERNAME_TEST, ROLE_TEST, PASSWORD_TEST, PASSWORD_TEST, "uusuario_demo@sub.dominio.net"),
-                new UserCreationRequest(USERNAME_TEST, ROLE_TEST, PASSWORD_TEST, PASSWORD_TEST, "mi-correo@sub.dominio.com"),
-                new UserCreationRequest(USERNAME_TEST, ROLE_TEST, PASSWORD_TEST, PASSWORD_TEST, "contacto@empresa-aero.aero"),
-                new UserCreationRequest(USERNAME_TEST, ROLE_TEST, PASSWORD_TEST, PASSWORD_TEST, "x-mas-tree@mi-dominio.space"),
-                new UserCreationRequest(USERNAME_TEST, ROLE_TEST, PASSWORD_TEST, PASSWORD_TEST, "abc.def@ejemplo.travel"),
-                new UserCreationRequest(USERNAME_TEST, ROLE_TEST, PASSWORD_TEST, PASSWORD_TEST, "bolt-runner@perrito.xyz"),
-                new UserCreationRequest(USERNAME_TEST, ROLE_TEST, PASSWORD_TEST, PASSWORD_TEST, "a-named-guy@b.co"),
-                new UserCreationRequest(USERNAME_TEST, ROLE_TEST, PASSWORD_TEST, PASSWORD_TEST, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@dominio.com"),
-                new UserCreationRequest(USERNAME_TEST, ROLE_TEST, PASSWORD_TEST, PASSWORD_TEST, "a@aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.com")
+                "usuario@ejemplo.com",
+                "juan.perez@gmail.com",
+                "maria_lopez-23@outlook.com",
+                "nombre.apellido@ejemplo.org",
+                "pepito123@empresa.net",
+                "a12345@dominio.org",
+                "uusuario_demo@sub.dominio.net",
+                "mi-correo@sub.dominio.com",
+                "contacto@empresa-aero.aero",
+                "x-mas-tree@mi-dominio.space",
+                "abc.def@ejemplo.travel",
+                "bolt-runner@perrito.xyz",
+                "a-named-guy@b.co",
+                "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@dominio.com",
+                "a@aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.com",
+                "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.com"
         );
     }
 }
