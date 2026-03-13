@@ -70,11 +70,10 @@ public class ConstraintViolationAssertion {
             Optional<String> actualMessage = getActualMessage(constraintViolations);
             Optional<String> actualPropertyPath = getActualPropertyPath(constraintViolations);
             constraintViolationDetails
-                    .append("Constraint Violation failed: ")
-                    .append("\n Message: ")
-                    .append(actualMessage.orElseThrow())
-                    .append("\n PropertyPath: ")
-                    .append(actualPropertyPath.orElseThrow());
+                    .append("Constraint Violation failed on propertyPath: '")
+                    .append(actualPropertyPath.orElseThrow())
+                    .append("' with message:\n")
+                    .append(actualMessage.orElseThrow());
         }
         assertTrue(constraintViolations.isEmpty(), constraintViolationDetails.toString());
     }
