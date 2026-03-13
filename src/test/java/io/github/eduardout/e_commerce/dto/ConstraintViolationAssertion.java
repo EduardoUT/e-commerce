@@ -65,7 +65,18 @@ public class ConstraintViolationAssertion {
      */
     public <T> void assertEmptyConstraintViolations(T recordToValidate) {
         Set<ConstraintViolation<T>> constraintViolations = validator.validate(recordToValidate);
-        assertTrue(constraintViolations.isEmpty());
+        StringBuilder constraintViolationDetails = new StringBuilder();
+        if (!constraintViolations.isEmpty()) {
+            Optional<String> actualMessage = getActualMessage(constraintViolations);
+            Optional<String> actualPropertyPath = getActualPropertyPath(constraintViolations);
+            constraintViolationDetails
+                    .append("Constraint Violation failed: ")
+                    .append("\n Message: ")
+                    .append(actualMessage.orElseThrow())
+                    .append("\n PropertyPath: ")
+                    .append(actualPropertyPath.orElseThrow());
+        }
+        assertTrue(constraintViolations.isEmpty(), constraintViolationDetails.toString());
     }
 
     private <T> Optional<String> getActualMessage(Set<ConstraintViolation<T>> constraintViolations) {
