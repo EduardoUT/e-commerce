@@ -3,8 +3,8 @@ package io.github.eduardout.e_commerce.dto.request;
 import jakarta.validation.constraints.*;
 
 public record UserCreationRequest(
+        @NotNull(message = "Username is mandatory")
         @Size(min = 4, max = 50, message = "Username must be between 4 and 50 characters size")
-        @NotBlank(message = "Username is mandatory")
         String username,
         @NotBlank(message = "Role is mandatory")
         String role,
@@ -20,17 +20,16 @@ public record UserCreationRequest(
         String password,
         @NotBlank(message = "Password confirmation is mandatory")
         String passwordConfirmation,
-
-        @Email(regexp = "^[a-z](\\.?[a-z\\d_\\-]){5,63}@[a-z]([_\\-\\.]?([a-z]\\d?)?[a-z]){0,254}$",
+        @NotBlank(message = "Email cannot be empty")
+        @Email(regexp = "^[a-z](\\.?[a-z\\d_\\-]){0,63}@[a-z]([_\\-\\.]?([a-z]\\d?)?[a-z]){0,63}$",
                 message = """
                          Email must commit the following requirements:
-                         - Username (before) @ must be at least 6 characters and max 30.
-                         - Domain must be max 62 characters.
+                         - Local part (before) @ must be min 1 character and max 64
+                         - Domain part (after) @ should be min 1 character and max 64
                          - Cannot contain sequential dots
                          - Cannot contain sequential underscores
                          - Cannot contain sequential hyphen
                         """)
-        @NotBlank(message = "Email cannot be empty")
         String email
 ) {
     public UserCreationRequest {
