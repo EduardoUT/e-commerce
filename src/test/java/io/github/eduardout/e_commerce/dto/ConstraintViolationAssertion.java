@@ -45,13 +45,23 @@ public class ConstraintViolationAssertion {
                                               T recordToValidate) {
         Set<ConstraintViolation<T>> constraintViolations = validator.validate(recordToValidate);
 
-        Optional<String> actualMessage = getActualMessage(constraintViolations);
-        Optional<String> actualPropertyPath = getActualPropertyPath(constraintViolations);
+        Optional<ConstraintViolation<T>> actualConstraintViolation = getActualConstraintViolation(
+                constraintViolations,
+                expectedMessage,
+                expectedParameterRecord
+        );
 
         assertAll(
-                () -> assertEquals(expectedMessage, actualMessage.orElseThrow(),
+                () -> assertTrue(actualConstraintViolation.isPresent(),
+                        "No ConstraintViolation found with message %n '%s' %n on property '%s'"
+                                .formatted(expectedMessage, expectedParameterRecord)),
+                () -> assertEquals(expectedMessage, actualConstraintViolation
+                                .map(ConstraintViolation::getMessage)
+                                .orElse(null),
                         "ConstraintViolation message don't match with expected"),
-                () -> assertEquals(expectedParameterRecord, actualPropertyPath.orElseThrow(),
+                () -> assertEquals(expectedParameterRecord, actualConstraintViolation
+                                .map(cv -> cv.getPropertyPath().toString())
+                                .orElse(null),
                         "ConstraintViolation property path don't match with expected")
         );
     }
@@ -65,30 +75,30 @@ public class ConstraintViolationAssertion {
      */
     public <T> void assertEmptyConstraintViolations(T recordToValidate) {
         Set<ConstraintViolation<T>> constraintViolations = validator.validate(recordToValidate);
+        assertTrue(constraintViolations.isEmpty(), getConstraintViolationDetail(constraintViolations));
+    }
+
+    private <T> String getConstraintViolationDetail(Set<ConstraintViolation<T>> constraintViolations) {
         StringBuilder constraintViolationDetails = new StringBuilder();
-        if (!constraintViolations.isEmpty()) {
-            Optional<String> actualMessage = getActualMessage(constraintViolations);
-            Optional<String> actualPropertyPath = getActualPropertyPath(constraintViolations);
-            constraintViolationDetails
-                    .append("Constraint Violation failed on propertyPath: '")
-                    .append(actualPropertyPath.orElseThrow())
-                    .append("' with message:\n")
-                    .append(actualMessage.orElseThrow());
-        }
-        assertTrue(constraintViolations.isEmpty(), constraintViolationDetails.toString());
+        constraintViolationDetails
+                .append(constraintViolations.size())
+                .append(" Constraint Violations detected: \n");
+
+        constraintViolations.forEach(cv ->
+                constraintViolationDetails
+                        .append(cv)
+                        .append("\n\n"));
+        return constraintViolationDetails.toString();
     }
 
-    private <T> Optional<String> getActualMessage(Set<ConstraintViolation<T>> constraintViolations) {
+    private <T> Optional<ConstraintViolation<T>> getActualConstraintViolation(
+            Set<ConstraintViolation<T>> constraintViolations,
+            String expectedMessage,
+            String expectedPropertyPath) {
         return constraintViolations
                 .stream()
-                .findFirst()
-                .map(ConstraintViolation::getMessage);
-    }
-
-    private <T> Optional<String> getActualPropertyPath(Set<ConstraintViolation<T>> constraintViolations) {
-        return constraintViolations
-                .stream()
-                .findFirst()
-                .map(cv -> cv.getPropertyPath().toString());
+                .filter(cv -> expectedMessage.equals(cv.getMessage()))
+                .filter(cv -> expectedPropertyPath.equals(cv.getPropertyPath().toString()))
+                .findAny();
     }
 }
