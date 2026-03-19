@@ -5,8 +5,8 @@ import io.github.eduardout.e_commerce.entity.FiscalData;
 public class FiscalDatas {
     public static FiscalData.FiscalDataBuilder aFiscalData() {
         return FiscalData.aFiscalData()
-                .withRfc("KICR630120NX3")
-                .withRegimeTax("05C")
+                .withRfc("EKU9003173C9")
+                .withRegimeTax("625")
                 .withFiscalAddress("Some test fiscal address");
     }
 }
