@@ -1,15 +1,17 @@
 package io.github.eduardout.e_commerce.dto.request;
 
+import io.github.eduardout.e_commerce.dto.constraint.annotation.PasswordMatches;
 import jakarta.validation.constraints.*;
 
+@PasswordMatches
 public record UserCreationRequest(
-        @NotNull(message = "Username is mandatory")
+        @NotBlank(message = "Username is mandatory")
         @Size(min = 4, max = 50, message = "Username must be between 4 and 50 characters size")
         String username,
         @NotBlank(message = "Role is mandatory")
         String role,
         @NotBlank(message = "Password is mandatory")
-        @Pattern(regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\\W)(?!.*\\s).{14,19}$",
+        @Pattern(regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\\W)(?!.*\\s).{15,20}$",
                 message = """
                         Password must commit the following requirements:
                         - Must be at least 15 characters and max 20.
@@ -32,10 +34,4 @@ public record UserCreationRequest(
                         """)
         String email
 ) {
-    public UserCreationRequest {
-        if ((password != null && passwordConfirmation != null)
-                && !(password.equals(passwordConfirmation))) {
-            throw new IllegalArgumentException("Password and password confirmation don't match");
-        }
-    }
 }
