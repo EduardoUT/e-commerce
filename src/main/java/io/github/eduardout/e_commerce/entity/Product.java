@@ -2,6 +2,7 @@ package io.github.eduardout.e_commerce.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
@@ -30,15 +31,15 @@ public class Product implements Identifiable<Long> {
     private Byte discountPercentage;
     @Getter
     @Setter
-    @Column(name = "discount_amount", nullable = false)
+    @Column(name = "discount_amount", nullable = false, precision = 9, scale = 2)
     private BigDecimal discountAmount;
     @Getter
     @Setter
-    @Column(name = "sell_price", nullable = false)
+    @Column(name = "sell_price", nullable = false, precision = 9, scale = 2)
     private BigDecimal sellPrice;
     @Getter
     @Setter
-    @Column(name = "purchase_price", nullable = false)
+    @Column(name = "purchase_price", nullable = false, precision = 9, scale = 2)
     private BigDecimal purchasePrice;
     @Getter
     @Setter
@@ -50,9 +51,12 @@ public class Product implements Identifiable<Long> {
     @JoinColumn(name = "product_category_id", nullable = false)
     private ProductCategory productCategory;
     @Getter
-    @Setter
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
+    @Getter
     @UpdateTimestamp
-    @Column(name = "updated_at")
+    @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
     @Builder(builderMethodName = "aProduct", setterPrefix = "with")
