@@ -44,8 +44,7 @@ public class ConstraintViolationAssertion {
                                               String expectedParameterRecord,
                                               T recordToValidate) {
         Set<ConstraintViolation<T>> constraintViolations = validator.validate(recordToValidate);
-
-        Optional<ConstraintViolation<T>> actualConstraintViolation = getActualConstraintViolation(
+        Optional<ConstraintViolation<T>> actualConstraintViolation = getActualConstraintViolationByPropertyPath(
                 constraintViolations,
                 expectedMessage,
                 expectedParameterRecord
@@ -63,6 +62,24 @@ public class ConstraintViolationAssertion {
                                 .map(cv -> cv.getPropertyPath().toString())
                                 .orElse(null),
                         "ConstraintViolation property path don't match with expected")
+        );
+    }
+
+    public <T> void assertConstraintViolation(String expectedMessage, T recordToValidate) {
+        Set<ConstraintViolation<T>> constraintViolations = validator.validate(recordToValidate);
+        Optional<ConstraintViolation<T>> actualConstraintViolation = getActualConstraintViolationByRootBeanClass(
+                constraintViolations,
+                recordToValidate,
+                expectedMessage
+        );
+
+        assertAll(
+                () -> assertTrue(actualConstraintViolation.isPresent(),
+                        "No ConstraintViolation found with message %n '%s' %n on class '%s'"
+                                .formatted(expectedMessage, recordToValidate.getClass().getSimpleName())),
+                () -> assertEquals(expectedMessage, actualConstraintViolation
+                        .map(ConstraintViolation::getMessage)
+                        .orElse(null))
         );
     }
 
@@ -91,7 +108,7 @@ public class ConstraintViolationAssertion {
         return constraintViolationDetails.toString();
     }
 
-    private <T> Optional<ConstraintViolation<T>> getActualConstraintViolation(
+    private <T> Optional<ConstraintViolation<T>> getActualConstraintViolationByPropertyPath(
             Set<ConstraintViolation<T>> constraintViolations,
             String expectedMessage,
             String expectedPropertyPath) {
@@ -99,6 +116,17 @@ public class ConstraintViolationAssertion {
                 .stream()
                 .filter(cv -> expectedMessage.equals(cv.getMessage()))
                 .filter(cv -> expectedPropertyPath.equals(cv.getPropertyPath().toString()))
+                .findAny();
+    }
+
+    private <T> Optional<ConstraintViolation<T>> getActualConstraintViolationByRootBeanClass(
+            Set<ConstraintViolation<T>> constraintViolations,
+            T recordToValidate,
+            String expectedMessage) {
+        return constraintViolations
+                .stream()
+                .filter(cv -> recordToValidate.getClass().equals(cv.getRootBeanClass()))
+                .filter(cv -> expectedMessage.equals(cv.getMessage()))
                 .findAny();
     }
 }
