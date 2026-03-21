@@ -4,14 +4,11 @@ import io.github.eduardout.e_commerce.dto.ConstraintViolationAssertion;
 import io.github.eduardout.e_commerce.entity.User;
 import io.github.eduardout.e_commerce.entity.data.builder.Users;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class UserCreationRequestTest {
     private final ConstraintViolationAssertion constraintViolationAssertion = new ConstraintViolationAssertion();
@@ -39,13 +36,14 @@ class UserCreationRequestTest {
         );
     }
 
-    @Test
-    void testNullUsername() {
+    @ParameterizedTest
+    @MethodSource("streamOfInvalidNotBlank")
+    void testNotBlankUsername(String username) {
         constraintViolationAssertion.assertConstraintViolation(
                 "Username is mandatory",
                 "username",
                 new UserCreationRequest(
-                        null,
+                        username,
                         userTest.getRole(),
                         userTest.getPassword(),
                         userTest.getPassword(),
@@ -122,18 +120,18 @@ class UserCreationRequestTest {
         );
     }
 
-    @DisplayName("Should throw IllegalArgumentException when password and passwordConfirmation don't match")
     @Test
     void testPasswordMismatch() {
-        IllegalArgumentException e = assertThrowsExactly(IllegalArgumentException.class, () ->
+        constraintViolationAssertion.assertConstraintViolation(
+                "Password and password confirmation don't match",
                 new UserCreationRequest(
                         userTest.getUsername(),
                         userTest.getRole(),
                         "6N^o57ZAC!@JHJC",
                         "ovPJuKA^^M9optq",
                         userTest.getEmail()
-                ));
-        assertEquals("Password and password confirmation don't match", e.getMessage());
+                )
+        );
     }
 
     @ParameterizedTest
