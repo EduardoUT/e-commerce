@@ -6,5 +6,5 @@ public record CustomerCreationRequest(
         @NotNull(message = "User is mandatory")
         UserCreationRequest userCreationRequest,
         @NotNull(message = "Personal data is mandatory")
-        PersonalDataCreationRequest personalData) {
+        PersonalDataCreationRequest personalDataCreationRequest) {
 }
