@@ -5,10 +5,10 @@ import jakarta.validation.constraints.Size;
 
 public record ProductCategoryCreationRequest(
         @NotBlank(message = "Name of category is mandatory")
-        @Size(min = 3, max = 50, message = "Name out of range which minimum is 3 and maximum 50 characters")
+        @Size(min = 3, max = 50, message = "Product category name must be between 3 and 50 characters")
         String name,
         @NotBlank(message = "Must provide a description of this category")
-        @Size(min = 10, max = 250, message = "Description out of range which minimum is 10 and maximum 250 characters")
+        @Size(min = 15, max = 250, message = "Product category description must be between 15 and 250 characters")
         String description
 ) {
 }
