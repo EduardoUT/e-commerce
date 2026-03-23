@@ -1,5 +1,6 @@
 package io.github.eduardout.e_commerce.dto.request;
 
+import io.github.eduardout.e_commerce.dto.constraint.annotation.CheckAge;
 import io.github.eduardout.e_commerce.dto.constraint.annotation.CheckOnlyLetters;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -21,6 +22,7 @@ public record PersonalDataCreationRequest(
         @Size(min = 2, max = 30, message = "Paternal surname is out of range")
         String paternalSurname,
         @NotNull(message = "Birth date is mandatory")
+        @CheckAge
         LocalDate birthDate,
         @NotNull(message = "Phone number is mandatory")
         @Pattern(regexp = "^(?:\\+?\\d{1,3}(?:-?\\d{3,4})?)?-?\\d+(?:-?\\d{2}){4}$", message = """
@@ -35,14 +37,4 @@ public record PersonalDataCreationRequest(
                 "area code")
         String phoneNumber
 ) {
-    public PersonalDataCreationRequest {
-        if (birthDate != null) {
-            Integer currentYear = LocalDate.now().getYear();
-            Integer birthYear = birthDate.getYear();
-            int age = currentYear - birthYear;
-            if (age < 18) {
-                throw new IllegalArgumentException("You are under age");
-            }
-        }
-    }
 }
