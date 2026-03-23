@@ -9,9 +9,12 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.time.LocalDate;
-import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.time.Month;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.stream.Stream;
 
 class PersonalDataCreationRequestTest {
     private static final String CHECK_ONLY_LETTERS_MESSAGE = """
@@ -216,19 +219,53 @@ class PersonalDataCreationRequestTest {
         );
     }
 
-    @Test
-    void testBirthDateAge() {
-        IllegalArgumentException illegalArgumentException;
-        illegalArgumentException = assertThrowsExactly(IllegalArgumentException.class, () ->
+    @ParameterizedTest
+    @MethodSource("streamOfInvalidBirthDates")
+    void testCheckAge(LocalDate localDate) {
+        constraintViolationAssertion.assertConstraintViolation(
+                "You are under age",
+                "birthDate",
                 new PersonalDataCreationRequest(
                         personalDataTest.getFirstName(),
                         personalDataTest.getMaternalSurname(),
                         personalDataTest.getPaternalSurname(),
-                        LocalDate.of(2019, 2, 23),
+                        localDate,
                         personalDataTest.getPhoneNumber()
-                ));
+                )
+        );
 
-        assertEquals("You are under age", illegalArgumentException.getMessage());
+
+    }
+
+    static Stream<LocalDate> streamOfInvalidBirthDates() {
+        List<LocalDate> localDates = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            localDates.add(getInvalidBirthDate());
+        }
+        return localDates.stream();
+    }
+
+    static LocalDate getInvalidBirthDate() {
+        LocalDate currentDate = LocalDate.now();
+        Random random = new Random();
+        int randomAge = random.nextInt(1, 18);
+        int invalidYear = currentDate.getYear() - randomAge;
+        int randomMonth = random.nextInt(1, 13);
+        Month month = Month.of(randomMonth);
+        int day = -1;
+
+        switch (month) {
+            case JANUARY, MARCH, MAY, JULY, AUGUST, OCTOBER, DECEMBER -> day = random.nextInt(1, 32);
+            case APRIL, JUNE, SEPTEMBER, NOVEMBER -> day = random.nextInt(1, 31);
+            case FEBRUARY -> {
+                if (currentDate.isLeapYear()) {
+                    day = random.nextInt(1, 30);
+                } else {
+                    day = random.nextInt(1, 29);
+                }
+            }
+        }
+        return LocalDate.of(invalidYear, month, day);
     }
 
     @Test
