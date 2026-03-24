@@ -4,15 +4,12 @@ import io.github.eduardout.e_commerce.entity.Address;
 import io.github.eduardout.e_commerce.entity.data.builder.Addresses;
 import io.github.eduardout.e_commerce.dto.ConstraintViolationAssertion;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 
 import java.util.stream.Stream;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class AddressCreationRequestTest {
     private Address testAddress;
@@ -343,11 +340,10 @@ class AddressCreationRequestTest {
     }
 
     @Test
-    void testExternalNumberBoundaries() {
+    void testPositiveExternalNumber() {
         constraintViolationAssertion.assertConstraintViolation(
                 "External number must not be negative",
                 "externalNumber",
-
                 new AddressCreationRequest(
                         testAddress.getStreet(),
                         testAddress.getNeighborhood(),
@@ -358,42 +354,29 @@ class AddressCreationRequestTest {
                         testAddress.getInternalNumber()
                 )
         );
+    }
 
+    @Test
+    void testNotNullInternalNumber() {
         constraintViolationAssertion.assertConstraintViolation(
-                "External number must not be negative",
-                "externalNumber",
+                "Internal number should not be null, if omitted write 0",
+                "internalNumber",
                 new AddressCreationRequest(
                         testAddress.getStreet(),
                         testAddress.getNeighborhood(),
                         testAddress.getMunicipality(),
                         testAddress.getState(),
                         testAddress.getZipCode(),
-                        Integer.MAX_VALUE + 1,
-                        testAddress.getInternalNumber()
+                        testAddress.getExternalNumber(),
+                        null
                 )
         );
     }
 
-    @DisplayName("Should set an internal number of 0 when argument is null")
     @Test
-    void testNullInternalNumber() {
-        AddressCreationRequest addressCreationRequest = new AddressCreationRequest(
-                testAddress.getStreet(),
-                testAddress.getNeighborhood(),
-                testAddress.getMunicipality(),
-                testAddress.getState(),
-                testAddress.getZipCode(),
-                testAddress.getExternalNumber(),
-                null
-        );
-
-        assertEquals(0, addressCreationRequest.internalNumber());
-    }
-
-    @Test
-    void testNegativeInternalNumber() {
+    void testPositiveOrZeroInternalNumber() {
         constraintViolationAssertion.assertConstraintViolation(
-                "Internal number should not be negative, if omitted type null",
+                "Internal number should not be negative, if omitted write 0",
                 "internalNumber",
                 new AddressCreationRequest(
                         testAddress.getStreet(),
