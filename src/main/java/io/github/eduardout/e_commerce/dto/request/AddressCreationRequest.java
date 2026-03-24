@@ -19,13 +19,10 @@ public record AddressCreationRequest(
         @Pattern(regexp = "^\\d{5}$", message = "The zip code must be of 5 numeric digits, and must not contain spaces")
         String zipCode,
         @NotNull(message = "External number should not be null")
-        @Min(value = 1, message = "External number must not be negative")
-        @Max(value = Integer.MAX_VALUE)
+        @Positive(message = "External number must not be negative")
         Integer externalNumber,
-        @Positive(message = "Internal number should not be negative, if omitted type null")
+        @NotNull(message = "Internal number should not be null, if omitted write 0")
+        @PositiveOrZero(message = "Internal number should not be negative, if omitted write 0")
         Integer internalNumber
 ) {
-    public AddressCreationRequest {
-        if (internalNumber == null) internalNumber = 0;
-    }
 }
