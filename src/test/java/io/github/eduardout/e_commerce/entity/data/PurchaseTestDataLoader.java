@@ -40,4 +40,12 @@ public class PurchaseTestDataLoader extends TestDataLoader<Purchase> {
                 .collect(Collectors.toSet());
         addEntities(purchases);
     }
+
+    public Set<PurchaseItem> getPurchaseItems(Set<Purchase> purchases) {
+        validateEntities(purchases);
+        return purchases
+                .stream()
+                .flatMap(purchase -> purchase.getPurchaseItems().stream())
+                .collect(Collectors.toSet());
+    }
 }
