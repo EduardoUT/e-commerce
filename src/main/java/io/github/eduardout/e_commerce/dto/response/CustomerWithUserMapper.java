@@ -6,25 +6,19 @@ import org.springframework.stereotype.Service;
 import java.util.function.Function;
 
 @Service
-public class CustomerMapper implements Function<Customer, CustomerResponse> {
+public class CustomerWithUserMapper implements Function<Customer, CustomerWithUserResponse> {
 
     private final UserResponseMapper userResponseMapper;
-    private final PersonalDataResponseMapper personalDataResponseMapper;
-    private final AddressResponseMapper addressResponseMapper;
 
-    public CustomerMapper(UserResponseMapper userResponseMapper, PersonalDataResponseMapper personalDataResponseMapper, AddressResponseMapper addressResponseMapper) {
+    public CustomerWithUserMapper(UserResponseMapper userResponseMapper, PersonalDataResponseMapper personalDataResponseMapper, AddressResponseMapper addressResponseMapper) {
         this.userResponseMapper = userResponseMapper;
-        this.personalDataResponseMapper = personalDataResponseMapper;
-        this.addressResponseMapper = addressResponseMapper;
     }
 
     @Override
-    public CustomerResponse apply(Customer customer) {
-        return new CustomerResponse(
+    public CustomerWithUserResponse apply(Customer customer) {
+        return new CustomerWithUserResponse(
                 customer.getId(),
-                userResponseMapper.apply(customer.getUser()),
-                personalDataResponseMapper.apply(customer.getPersonalData()),
-                addressResponseMapper.apply(customer.getAddress())
+                userResponseMapper.apply(customer.getUser())
         );
     }
 }
