@@ -3,6 +3,7 @@ package io.github.eduardout.e_commerce.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -30,21 +31,24 @@ public class Purchase implements Identifiable<Long> {
     private Set<PurchaseItem> purchaseItems = new HashSet<>();
     @Getter
     @Setter
-    @Column(name = "discount_amount")
+    @Column(name = "discount_amount", nullable = false, precision = 9, scale = 2)
     private BigDecimal discountAmount = DEFAULT_AMOUNT;
     @Getter
     @Setter
-    @Column(name = "subtotal", nullable = false)
+    @Column(name = "subtotal", nullable = false, precision = 9, scale = 2)
     private BigDecimal subTotal;
     @Getter
     @Setter
-    @Column(nullable = false)
+    @Column(nullable = false, precision = 9, scale = 2)
     private BigDecimal total;
     @Getter
-    @Setter
     @CreationTimestamp
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
+    @Getter
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt;
 
     @Override
     public boolean equals(Object obj) {

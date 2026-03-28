@@ -4,6 +4,7 @@ import io.github.eduardout.e_commerce.util.OrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -47,19 +48,24 @@ public class Orders implements Identifiable<Long> {
     private Set<OrderItem> orderItems = new HashSet<>();
     @Getter
     @Setter
-    @Column(name = "discount_amount")
+    @Column(name = "discount_amount", nullable = false, precision = 9, scale = 2)
     private BigDecimal discountAmount = DEFAULT_AMOUNT;
     @Getter
     @Setter
-    @Column(name = "subtotal", nullable = false)
+    @Column(name = "subtotal", nullable = false, precision = 9, scale = 2)
     private BigDecimal subTotal;
     @Getter
     @Setter
-    @Column(name = "total", nullable = false)
+    @Column(name = "total", nullable = false, precision = 9, scale = 2)
     private BigDecimal total;
+    @Getter
     @CreationTimestamp
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
+    @Getter
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt;
 
     public void addOrderItem(OrderItem orderItem) {
         orderItems.add(orderItem);
@@ -77,7 +83,7 @@ public class Orders implements Identifiable<Long> {
             return true;
         }
 
-        if(!(obj instanceof Orders other)) {
+        if (!(obj instanceof Orders other)) {
             return false;
         }
         return id != null && id.equals(other.getId());
