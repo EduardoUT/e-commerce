@@ -58,4 +58,12 @@ public class OrdersTestDataLoader extends TestDataLoader<Orders> {
             throw new RuntimeException(e);
         }
     }
+
+    public Set<OrderItem> getOrderItems(Set<Orders> orders) {
+        validateEntities(orders);
+        return orders
+                .stream()
+                .flatMap(order -> order.getOrderItems().stream())
+                .collect(Collectors.toSet());
+    }
 }
