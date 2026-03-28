@@ -4,15 +4,16 @@ import io.github.eduardout.e_commerce.util.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @ToString(exclude = "customer")
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Payment implements Identifiable<Long> {
     @Getter
     @Id
@@ -31,19 +32,23 @@ public class Payment implements Identifiable<Long> {
     @Getter
     @Setter
     @Column(name = "external_id", nullable = false, unique = true, updatable = false)
-    @EqualsAndHashCode.Include
     private String externalId;
     @Getter
     @Setter
-    @Column(name = "gateway_name")
+    @Column(name = "gateway_name", nullable = false, updatable = false)
     private String gatewayName;
     @Getter
     @Setter
-    @Column(nullable = false)
+    @Column(nullable = false, precision = 9, scale = 2)
     private BigDecimal amount;
+    @Getter
     @CreationTimestamp
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
+    @Getter
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt;
 
     @Builder(builderMethodName = "aPayment", setterPrefix = "with")
     private Payment(Customer customer,
@@ -57,5 +62,21 @@ public class Payment implements Identifiable<Long> {
         this.externalId = externalId;
         this.gatewayName = gatewayName;
         this.amount = amount;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) {
+            return true;
+        }
+        if (!(object instanceof Payment other)) return false;
+        return id != null
+                && id.equals(other.getId())
+                && Objects.equals(externalId, other.getExternalId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }
