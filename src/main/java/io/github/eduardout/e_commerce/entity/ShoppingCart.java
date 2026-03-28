@@ -26,24 +26,23 @@ public class ShoppingCart implements Identifiable<Long> {
     private final Set<CartItem> cartItems = new HashSet<>();
     @Getter
     @Setter
+    @Column(name = "discount_amount", nullable = false, precision = 9, scale = 2)
     private BigDecimal discountAmount = DEFAULT_AMOUNT;
     @Getter
     @Setter
-    @Column(name = "subtotal", nullable = false)
+    @Column(name = "subtotal", nullable = false, precision = 9, scale = 2)
     private BigDecimal subTotal;
     @Getter
     @Setter
-    @Column(name = "total", nullable = false)
+    @Column(name = "total", nullable = false, precision = 9, scale = 2)
     private BigDecimal total;
     @Getter
-    @Setter
     @CreationTimestamp
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
     @Getter
-    @Setter
     @UpdateTimestamp
-    @Column(name = "updated_at")
+    @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
     public void addCartItem(CartItem cartItem) {
@@ -86,7 +85,7 @@ public class ShoppingCart implements Identifiable<Long> {
         private ShoppingCartBuilder() {
         }
 
-        private ShoppingCartBuilder (ShoppingCartBuilder copy) {
+        private ShoppingCartBuilder(ShoppingCartBuilder copy) {
             this.cartItems = copy.cartItems;
             this.subTotal = copy.subTotal;
             this.discountAmount = copy.discountAmount;
