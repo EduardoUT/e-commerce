@@ -1,7 +1,7 @@
 package io.github.eduardout.e_commerce.service;
 
-import io.github.eduardout.e_commerce.dto.response.CustomerResponse;
-import io.github.eduardout.e_commerce.dto.response.CustomerMapper;
+import io.github.eduardout.e_commerce.dto.response.CustomerWithUserMapper;
+import io.github.eduardout.e_commerce.dto.response.CustomerWithUserResponse;
 import io.github.eduardout.e_commerce.repository.CustomerRepository;
 import org.springframework.stereotype.Service;
 
@@ -9,16 +9,16 @@ import org.springframework.stereotype.Service;
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
-    private final CustomerMapper customerMapper;
+    private final CustomerWithUserMapper customerWithUserMapper;
 
-    public CustomerService(CustomerRepository customerRepository, CustomerMapper customerMapper) {
+    public CustomerService(CustomerRepository customerRepository, CustomerWithUserMapper customerWithUserMapper) {
         this.customerRepository = customerRepository;
-        this.customerMapper = customerMapper;
+        this.customerWithUserMapper = customerWithUserMapper;
     }
 
-    public CustomerResponse findCustomerById(Long customerId) {
-        return customerRepository.findById(customerId)
-                .map(customerMapper)
+    public CustomerWithUserResponse findByIdWithUser(Long customerId) {
+        return customerRepository.findByIdWithUser(customerId)
+                .map(customerWithUserMapper)
                 .orElseThrow(() -> new IllegalStateException("Customer not found"));
     }
 }
