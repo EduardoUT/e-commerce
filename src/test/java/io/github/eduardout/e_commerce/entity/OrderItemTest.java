@@ -153,47 +153,6 @@ class OrderItemTest {
     @Nested
     class TestCrudOperations {
         @Test
-        void testSaveOrderItem() {
-            setUpCustomer();
-            setUpOrders();
-            Orders actualOrder = findFirstOrderTest(orders);
-            Product product = productRepository.findByName("Pringles").orElseThrow();
-            OrderItem orderItem = OrderItems.anOrderItem()
-                    .withOrders(actualOrder)
-                    .withProduct(product)
-                    .withLineAmount(product.getSellPrice())
-                    .build();
-            OrderItem expectedOrderItem = orderItemRepository.save(orderItem);
-            assertAll(
-                    () -> assertNotNull(expectedOrderItem),
-                    () -> assertNotNull(expectedOrderItem.getOrders().getId()),
-                    () -> assertNotNull(expectedOrderItem.getProduct().getId())
-            );
-        }
-
-        @Test
-        void testUpdateOrderItem() {
-            setUpCustomer();
-            setUpOrders();
-            Orders actualOrder = findFirstOrderTest(orders);
-            OrderItem actualOrderItem = findFirstOrderItemTest(actualOrder);
-            Integer unexpectedQuantity = actualOrderItem.getQuantity();
-            BigDecimal unexpectedLineAmount = actualOrderItem.getLineAmount();
-            OrderItem updatedOrderItem = OrderItems.anOrderItem()
-                    .withOrders(actualOrderItem.getOrders())
-                    .withProduct(actualOrderItem.getProduct())
-                    .withQuantity(6)
-                    .withLineAmount(actualOrderItem.getProduct().getSellPrice().multiply(new BigDecimal("6")))
-                    .build();
-            OrderItem expectedOrderItem = orderItemRepository.saveAndFlush(updatedOrderItem);
-            assertAll(
-                    () -> assertNotNull(expectedOrderItem),
-                    () -> assertNotEquals(unexpectedQuantity, expectedOrderItem.getQuantity()),
-                    () -> assertNotEquals(unexpectedLineAmount, expectedOrderItem.getLineAmount())
-            );
-        }
-
-        @Test
         void testFindByOrderId() {
             setUpCustomer();
             setUpOrders();

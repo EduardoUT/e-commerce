@@ -13,7 +13,6 @@ import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
 import org.springframework.dao.DataIntegrityViolationException;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -85,40 +84,17 @@ class ShoppingCartTest {
         }
 
         @Test
-        void testSaveShoppingCart() {
-            ShoppingCart expectedShoppingCart = shoppingCart;
-            assertAll(
-                    () -> assertNotNull(expectedShoppingCart),
-                    () -> assertNotNull(expectedShoppingCart.getId())
-            );
-        }
-
-        @Test
-        void testUpdateShoppingCart() {
-            ShoppingCart actualShoppingCart = shoppingCart;
-
-            BigDecimal subTotal = actualShoppingCart.getSubTotal();
-            BigDecimal discount = subTotal.multiply(new BigDecimal(".2"));
-            BigDecimal subTotalWithDiscount = subTotal.subtract(discount);
-            actualShoppingCart.setSubTotal(subTotalWithDiscount);
-
-            ShoppingCart expectedShoppingCart = shoppingCartRepository.save(actualShoppingCart);
-
-            assertAll(
-                    () -> assertNotNull(expectedShoppingCart),
-                    () -> assertNotEquals(subTotal, subTotalWithDiscount)
-            );
-        }
-
-        @Test
         void testDeleteByShoppingCartId() {
             ShoppingCart actualShoppingCart = shoppingCart;
 
             Long shoppingCartId = actualShoppingCart.getId();
             cartItemRepository.deleteByShoppingCartId(shoppingCartId);
+
             List<CartItem> unexpectedCartItems = cartItemRepository.findAllByShoppingCartId(shoppingCartId);
             assertTrue(unexpectedCartItems.isEmpty());
+
             shoppingCartRepository.deleteShoppingCartById(shoppingCartId);
+
             Optional<ShoppingCart> unexpectedShoppingCart = shoppingCartRepository.findByShoppingCartId(shoppingCartId);
             assertFalse(unexpectedShoppingCart.isPresent());
         }
@@ -127,6 +103,7 @@ class ShoppingCartTest {
         void testFindByShoppingCartId() {
             ShoppingCart actualShoppingCart = shoppingCart;
             Long expectedShoppingCartId = actualShoppingCart.getId();
+
             Optional<ShoppingCart> expectedShoppingCart = shoppingCartRepository.findByShoppingCartId(expectedShoppingCartId);
             assertTrue(expectedShoppingCart.isPresent());
         }

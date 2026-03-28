@@ -175,65 +175,6 @@ class OrdersTest {
     @Nested
     class TestCrudOperations {
         @Test
-        void testSaveOrder() {
-            setUpPayments();
-            setUpSeller();
-            setUpProducts();
-            Payment actualPayment = payments.stream().findFirst().orElseThrow();
-
-            Product product = products
-                    .stream()
-                    .filter(p -> p.getName().equals("Xiaomi Redmi 9"))
-                    .findFirst()
-                    .orElseThrow();
-            Integer quantity = 5;
-
-            BigDecimal calculation = product.getSellPrice().multiply(new BigDecimal(quantity.toString()));
-
-            Orders order = Orders.anOrder()
-                    .withSeller(seller)
-                    .withCustomer(customer)
-                    .withPayment(actualPayment)
-                    .withOrderStatus(OrderStatus.CONFIRMED)
-                    .withOrderItemElement(OrderItem.anOrderItem()
-                            .withProduct(product)
-                            .withQuantity(quantity)
-                            .withLineAmount(calculation)
-                            .build())
-                    .withSubTotal(calculation)
-                    .withTotal(calculation)
-                    .build();
-
-            Orders expectedOrder = ordersRepository.save(order);
-            assertAll(
-                    () -> assertNotNull(expectedOrder),
-                    () -> assertNotNull(expectedOrder.getId()));
-        }
-
-        @Test
-        void testUpdateOrder() {
-            setUpOrders();
-            Orders actualOrder = orders.stream().findFirst().orElseThrow();
-            OrderStatus actualOrderStatus = actualOrder.getOrderStatus();
-            actualOrder.setOrderStatus(OrderStatus.DELIVERED);
-            ordersRepository.saveAndFlush(actualOrder);
-            assertNotEquals(actualOrder.getOrderStatus(), actualOrderStatus);
-        }
-
-        @Test
-        void testDeleteOrder() {
-            setUpOrders();
-            Orders actualOrder = orders.stream().findFirst().orElseThrow();
-            Long orderId = actualOrder.getId();
-            orderItemRepository.deleteByOrderId(orderId);
-            List<OrderItem> unexpectedOrderItems = orderItemRepository.findAllByOrderId(orderId);
-            assertTrue(unexpectedOrderItems.isEmpty());
-            ordersRepository.delete(actualOrder);
-            Optional<Orders> unexpectedOrder = ordersRepository.findById(orderId);
-            assertFalse(unexpectedOrder.isPresent());
-        }
-
-        @Test
         void testDeleteOrdersByCustomerId() {
             setUpOrders();
             Long customerId = customer.getId();

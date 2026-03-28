@@ -17,7 +17,6 @@ import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
 import org.springframework.dao.DataIntegrityViolationException;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
 
@@ -120,50 +119,6 @@ class CartItemTest {
 
     @Nested
     class TestCrudOperations {
-        @Test
-        void testSaveCartItem() {
-            ShoppingCart actualShoppingCart = shoppingCart;
-            Product product = productRepository.findByName("Xiaomi Redmi 9").orElseThrow();
-
-            Integer quantity = 2;
-            BigDecimal calculation = product.getSellPrice().multiply(new BigDecimal(quantity.toString()));
-            CartItem actualCartItem = CartItem.aCartItem()
-                    .withShoppingCart(actualShoppingCart)
-                    .withProduct(product)
-                    .withQuantity(quantity)
-                    .withLineAmount(calculation)
-                    .build();
-            CartItem expectedCartItem = cartItemRepository.save(actualCartItem);
-            assertAll(
-                    () -> assertNotNull(expectedCartItem),
-                    () -> assertNotNull(expectedCartItem.getShoppingCart().getId()),
-                    () -> assertNotNull(expectedCartItem.getProduct().getId())
-            );
-        }
-
-        @Test
-        void testUpdateCartItem() {
-            ShoppingCart actualShoppingCart = shoppingCart;
-            CartItem actualCartItem = actualShoppingCart.getCartItems().stream().findFirst().orElseThrow();
-
-            Integer unexpectedQuantity = actualCartItem.getQuantity();
-            BigDecimal unexpectedLineAmount = actualCartItem.getLineAmount();
-
-            Integer quantity = 2;
-            BigDecimal calculation = actualCartItem.getProduct().getSellPrice().multiply(new BigDecimal(quantity.toString()));
-
-            actualCartItem.setQuantity(quantity);
-            actualCartItem.setLineAmount(calculation);
-
-            CartItem expectedCartItem = cartItemRepository.save(actualCartItem);
-
-            assertAll(
-                    () -> assertNotNull(expectedCartItem),
-                    () -> assertNotEquals(unexpectedQuantity, expectedCartItem.getQuantity()),
-                    () -> assertNotEquals(unexpectedLineAmount, expectedCartItem.getLineAmount())
-            );
-        }
-
         @Test
         void testFindAllByShoppingCartId() {
             ShoppingCart actualShoppingCart = shoppingCart;

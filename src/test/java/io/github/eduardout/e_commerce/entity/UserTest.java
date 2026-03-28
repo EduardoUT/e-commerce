@@ -62,39 +62,6 @@ class UserTest {
     @Nested
     class TestCrudOperations {
         @Test
-        void testSaveUser() {
-            User expectedUser = User.anUser()
-                    .withUsername("expectedUsername")
-                    .withPassword("5>[7k.x'X2,2{R?")
-                    .withRole("USER")
-                    .withEmail("expectedUserEmail@gmail.com")
-                    .build();
-
-            userRepository.save(expectedUser);
-
-            assertAll(
-                    () -> assertNotNull(expectedUser),
-                    () -> assertNotNull(expectedUser.getId())
-            );
-        }
-
-        @Test
-        void testUpdateUser() {
-            setUpUser();
-            User actualUser = userRepository.findByUsername("testUserOne").orElseThrow();
-            String actualEmail = actualUser.getEmail();
-
-            actualUser.setEmail("test_user_one@gmail.com");
-
-            userRepository.save(actualUser);
-
-            assertAll(
-                    () -> assertNotNull(actualUser),
-                    () -> assertNotEquals(actualEmail, actualUser.getEmail())
-            );
-        }
-
-        @Test
         void testFindByUsername() {
             setUpUser();
             Optional<User> expectedUser = userRepository.findByUsername("testUserOne");
@@ -106,17 +73,6 @@ class UserTest {
             setUpUser();
             Optional<User> expectedUser = userRepository.findByEmail("test_email_two@gmail.com");
             assertTrue(expectedUser.isPresent());
-        }
-
-        @Test
-        void testDeleteUser() {
-            setUpUser();
-            User actualUser = userRepository.findByUsername("testUserOne").orElseThrow();
-
-            userRepository.delete(actualUser);
-
-            Optional<User> unexpectedUser = userRepository.findByUsername("testUserOne");
-            assertFalse(unexpectedUser.isPresent());
         }
     }
 

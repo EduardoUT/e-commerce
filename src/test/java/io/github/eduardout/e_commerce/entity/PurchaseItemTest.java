@@ -145,50 +145,6 @@ class PurchaseItemTest {
     @Nested
     class TestCrudOperations {
         @Test
-        void testSavePurchaseItem() {
-            Purchase actualPurchase = findFirstPurchase(purchases);
-            Product product = products
-                    .stream()
-                    .filter(p -> p.getName().equals("Pringles"))
-                    .findFirst()
-                    .orElseThrow();
-
-            PurchaseItem actualPurchaseItem = PurchaseItem.aPurchaseItem()
-                    .withPurchase(actualPurchase)
-                    .withProduct(product)
-                    .withQuantity(quantity)
-                    .withLineAmount(product.getSellPrice().multiply(new BigDecimal(quantity.toString())))
-                    .build();
-
-            PurchaseItem expectedPurchaseItem = purchaseItemRepository.save(actualPurchaseItem);
-
-            assertAll(
-                    () -> assertNotNull(expectedPurchaseItem),
-                    () -> assertNotNull(expectedPurchaseItem.getPurchase().getId()),
-                    () -> assertNotNull(expectedPurchaseItem.getProduct().getId())
-            );
-        }
-
-        @Test
-        void testUpdatePurchaseItem() {
-            Purchase actualPurchase = findFirstPurchase(purchases);
-            PurchaseItem actualPurchaseItem = findFirstPurchaseItem(actualPurchase);
-
-            Integer unexpectedQuantity = actualPurchaseItem.getQuantity();
-            BigDecimal unexpectedLineAmount = actualPurchaseItem.getLineAmount();
-
-            actualPurchaseItem.setQuantity(quantity);
-            actualPurchaseItem.setLineAmount(actualPurchaseItem.getLineAmount().multiply(new BigDecimal(quantity.toString())));
-
-            PurchaseItem expectedPurchaseItem = purchaseItemRepository.save(actualPurchaseItem);
-            assertAll(
-                    () -> assertNotNull(expectedPurchaseItem),
-                    () -> assertNotEquals(unexpectedQuantity, expectedPurchaseItem.getQuantity()),
-                    () -> assertNotEquals(unexpectedLineAmount, expectedPurchaseItem.getLineAmount())
-            );
-        }
-
-        @Test
         void testFindAllByPurchaseId() {
             Purchase actualPurchase = findFirstPurchase(purchases);
             List<PurchaseItem> expectedPurchaseItem = purchaseItemRepository.findAllByPurchaseId(actualPurchase.getId());

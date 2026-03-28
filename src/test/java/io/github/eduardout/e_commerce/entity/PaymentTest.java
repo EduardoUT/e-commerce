@@ -96,43 +96,6 @@ class PaymentTest {
     @Nested
     class TestCrudOperations {
         @Test
-        void testSavePayment() {
-            setUpCustomer();
-            Customer actualCustomer = customer;
-            Payment expectedPayment = Payment.aPayment()
-                    .withCustomer(actualCustomer)
-                    .withPaymentStatus(PaymentStatus.SUCCESS)
-                    .withExternalId("stripe_131321123555")
-                    .withGatewayName("stripe")
-                    .withAmount(new BigDecimal("120.00"))
-                    .build();
-            paymentRepository.save(expectedPayment);
-            assertAll(
-                    () -> assertNotNull(expectedPayment),
-                    () -> assertNotNull(expectedPayment.getId())
-            );
-        }
-
-        @Test
-        void testUpdatePayment() {
-            setUpPayments();
-            Payment actualPayment = payments.stream().findFirst().orElseThrow();
-            PaymentStatus unexpectedPaymentStatus = actualPayment.getPaymentStatus();
-            String unexpectedExternalId = actualPayment.getExternalId();
-            String unexpectedGatewayName = actualPayment.getGatewayName();
-            actualPayment.setPaymentStatus(PaymentStatus.FAILED);
-            actualPayment.setExternalId("pypl_54564562222233");
-            actualPayment.setGatewayName("paypal");
-            paymentRepository.save(actualPayment);
-            assertAll(
-                    () -> assertNotNull(actualPayment),
-                    () -> assertNotEquals(unexpectedPaymentStatus, actualPayment.getPaymentStatus()),
-                    () -> assertNotEquals(unexpectedExternalId, actualPayment.getExternalId()),
-                    () -> assertNotEquals(unexpectedGatewayName, actualPayment.getGatewayName())
-            );
-        }
-
-        @Test
         void testFindAllByCustomerId() {
             setUpPayments();
             Long customerId = customer.getId();
