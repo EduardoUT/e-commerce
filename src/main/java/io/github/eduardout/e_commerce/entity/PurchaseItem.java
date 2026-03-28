@@ -12,7 +12,7 @@ import java.util.Objects;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @ToString(exclude = {"purchase"})
 @Builder(builderMethodName = "aPurchaseItem", setterPrefix = "with")
-public class PurchaseItem {
+public class PurchaseItem implements CompositeIdentifiable {
     @Getter
     @Setter
     @Id
@@ -31,7 +31,7 @@ public class PurchaseItem {
     private Integer quantity;
     @Getter
     @Setter
-    @Column(name = "line_amount", nullable = false)
+    @Column(name = "line_amount", nullable = false, precision = 9, scale = 2)
     private BigDecimal lineAmount;
 
     @Override
@@ -51,5 +51,10 @@ public class PurchaseItem {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    @Override
+    public Keyable getId() {
+        return new PurchaseItemId(purchase.getId(), product.getId());
     }
 }
