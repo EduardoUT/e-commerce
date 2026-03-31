@@ -7,8 +7,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import static io.github.eduardout.e_commerce.util.Calculation.DEFAULT_AMOUNT;
 
@@ -23,7 +23,7 @@ public class ShoppingCart implements Identifiable<Long> {
     private Long id;
     @Getter
     @OneToMany(mappedBy = "shoppingCart", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private final Set<CartItem> cartItems = new HashSet<>();
+    private final List<CartItem> cartItems = new ArrayList<>();
     @Getter
     @Setter
     @Column(name = "discount_amount", nullable = false, precision = 9, scale = 2)
@@ -77,7 +77,7 @@ public class ShoppingCart implements Identifiable<Long> {
     }
 
     public static class ShoppingCartBuilder {
-        private HashSet<CartItem> cartItems = new HashSet<>();
+        private List<CartItem> cartItems = new ArrayList<>();
         private BigDecimal discountAmount = DEFAULT_AMOUNT;
         private BigDecimal subTotal;
         private BigDecimal total;

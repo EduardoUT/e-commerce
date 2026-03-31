@@ -3,8 +3,8 @@ package io.github.eduardout.e_commerce.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -39,13 +39,13 @@ public class Customer implements Identifiable<Long> {
     private FiscalData fiscalData;
     @Getter
     @OneToMany(mappedBy = "customer", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private Set<Purchase> purchases = new HashSet<>();
+    private List<Purchase> purchases = new ArrayList<>();
     @Getter
     @OneToMany(mappedBy = "customer", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private Set<Payment> payments = new HashSet<>();
+    private List<Payment> payments = new ArrayList<>();
     @Getter
     @OneToMany(mappedBy = "customer", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private Set<Orders> orders = new HashSet<>();
+    private List<Orders> orders = new ArrayList<>();
     @Getter
     @Setter
     @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -111,9 +111,9 @@ public class Customer implements Identifiable<Long> {
         private Address address;
         private FiscalData fiscalData;
         private ShoppingCart shoppingCart;
-        private final Set<Purchase> purchases = new HashSet<>();
-        private final Set<Payment> payments = new HashSet<>();
-        private final Set<Orders> orders = new HashSet<>();
+        private final List<Purchase> purchases = new ArrayList<>();
+        private final List<Payment> payments = new ArrayList<>();
+        private final List<Orders> orders = new ArrayList<>();
 
         private CustomerBuilder() {
         }

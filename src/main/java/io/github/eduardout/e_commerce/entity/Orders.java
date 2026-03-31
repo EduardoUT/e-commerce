@@ -8,8 +8,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import static io.github.eduardout.e_commerce.util.Calculation.*;
 
@@ -45,7 +45,7 @@ public class Orders implements Identifiable<Long> {
     private OrderStatus orderStatus;
     @Getter
     @OneToMany(mappedBy = "orders", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private Set<OrderItem> orderItems = new HashSet<>();
+    private List<OrderItem> orderItems = new ArrayList<>();
     @Getter
     @Setter
     @Column(name = "discount_amount", nullable = false, precision = 9, scale = 2)
@@ -103,7 +103,7 @@ public class Orders implements Identifiable<Long> {
         private Customer customer;
         private Payment payment;
         private OrderStatus orderStatus;
-        private final Set<OrderItem> orderItems = new HashSet<>();
+        private final List<OrderItem> orderItems = new ArrayList<>();
         private BigDecimal discount = DEFAULT_AMOUNT;
         private BigDecimal subTotal;
         private BigDecimal total;
