@@ -18,11 +18,10 @@ public class PaymentTestDataLoader extends TestDataLoader<Payment> {
         this.customer = customer;
     }
 
-    public static Payment getRandomPayment(Set<Payment> payments) {
-        List<Payment> paymentList = payments.stream().toList();
+    public static Payment getRandomPayment(List<Payment> payments) {
         Random random = new Random();
-        int randomIdx = random.nextInt(0, paymentList.size());
-        return paymentList.get(randomIdx);
+        int randomIdx = random.nextInt(0, payments.size());
+        return payments.get(randomIdx);
     }
 
     @Override
