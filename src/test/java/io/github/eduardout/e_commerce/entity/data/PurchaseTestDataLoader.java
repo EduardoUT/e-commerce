@@ -38,12 +38,4 @@ public class PurchaseTestDataLoader extends TestDataLoader<Purchase> {
                 }).toList();
         addEntities(purchases);
     }
-
-    public List<PurchaseItem> getPurchaseItems(List<Purchase> purchases) {
-        validateEntities(purchases);
-        return purchases
-                .stream()
-                .flatMap(purchase -> purchase.getPurchaseItems().stream())
-                .toList();
-    }
 }
