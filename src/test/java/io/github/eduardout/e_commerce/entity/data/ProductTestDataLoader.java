@@ -11,10 +11,10 @@ import static io.github.eduardout.e_commerce.entity.data.ProductCategoryTestData
 import static io.github.eduardout.e_commerce.entity.data.builder.Products.aProduct;
 
 public class ProductTestDataLoader extends TestDataLoader<Product> {
-    private final Set<ProductCategory> productCategories;
+    private final List<ProductCategory> productCategories;
 
     public ProductTestDataLoader(ProductRepository productRepository,
-                                 Set<ProductCategory> productCategories) {
+                                 List<ProductCategory> productCategories) {
         super(productRepository);
         validateEntities(productCategories);
         this.productCategories = productCategories;

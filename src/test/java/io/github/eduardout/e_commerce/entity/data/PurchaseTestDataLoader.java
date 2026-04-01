@@ -5,14 +5,13 @@ import io.github.eduardout.e_commerce.repository.PurchaseRepository;
 
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class PurchaseTestDataLoader extends TestDataLoader<Purchase> {
 
-    private final Set<Product> products;
+    private final List<Product> products;
     private final Customer customer;
 
-    public PurchaseTestDataLoader(PurchaseRepository purchaseRepository, Set<Product> products, Customer customer) {
+    public PurchaseTestDataLoader(PurchaseRepository purchaseRepository, List<Product> products, Customer customer) {
         super(purchaseRepository);
         validateEntities(products);
         validateEntity(customer);
@@ -22,7 +21,7 @@ public class PurchaseTestDataLoader extends TestDataLoader<Purchase> {
 
     @Override
     protected void setDefaultTestEntities() {
-        Set<Purchase> purchases = products.stream()
+        List<Purchase> purchases = products.stream()
                 .map(product -> {
                     Integer quantity = 5;
                     BigDecimal calculation = product.getSellPrice().multiply(new BigDecimal(quantity.toString()));
@@ -36,16 +35,15 @@ public class PurchaseTestDataLoader extends TestDataLoader<Purchase> {
                             .withSubTotal(calculation)
                             .withTotal(calculation)
                             .build();
-                })
-                .collect(Collectors.toSet());
+                }).toList();
         addEntities(purchases);
     }
 
-    public Set<PurchaseItem> getPurchaseItems(Set<Purchase> purchases) {
+    public List<PurchaseItem> getPurchaseItems(List<Purchase> purchases) {
         validateEntities(purchases);
         return purchases
                 .stream()
                 .flatMap(purchase -> purchase.getPurchaseItems().stream())
-                .collect(Collectors.toSet());
+                .toList();
     }
 }

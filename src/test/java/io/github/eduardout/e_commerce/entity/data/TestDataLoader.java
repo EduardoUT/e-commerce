@@ -17,10 +17,8 @@ import static io.github.eduardout.e_commerce.util.Validate.collectionNonNullAndN
  * @param <T> Type of the test entities.
  */
 public abstract class TestDataLoader<T extends Identifiable<?>> {
-
     @Getter
-    private Set<T> transientEntities = new HashSet<>();
-
+    private final List<T> transientEntities = new ArrayList<>();
     @Getter(AccessLevel.PROTECTED)
     @Setter
     private JpaRepository<T, ?> jpaRepository;
@@ -41,7 +39,7 @@ public abstract class TestDataLoader<T extends Identifiable<?>> {
      *
      * @return Persistent entities
      */
-    public Set<T> setUp() {
+    public List<T> setUp() {
         return loadAndRetrieve();
     }
 
@@ -65,17 +63,17 @@ public abstract class TestDataLoader<T extends Identifiable<?>> {
      * </p>
      *
      * <p>
-     * Persist default transientEntities added on setDefaultTestEntities() within the context of inheritance via Set
+     * Persist default transientEntities added on setDefaultTestEntities() within the context of inheritance via List
      * of transientEntities with addEntity() or addEntities() methods.
      * </p>
      *
      * @return Persistent entities returned by saveAll().
      */
     @Transactional
-    protected Set<T> loadAndRetrieve() {
+    protected List<T> loadAndRetrieve() {
         setDefaultTestEntities();
         collectionNonNullAndNonEmpty(transientEntities);
-        return new HashSet<>(jpaRepository.saveAll(transientEntities));
+        return jpaRepository.saveAll(transientEntities);
     }
 
     protected <U extends Identifiable<?>> void validateEntities(Collection<U> entities) {

@@ -12,9 +12,9 @@ import static io.github.eduardout.e_commerce.entity.ShoppingCart.aShoppingCart;
 import static io.github.eduardout.e_commerce.util.Calculation.DEFAULT_AMOUNT;
 
 public class ShoppingCartTestDataLoader extends TestDataLoader<ShoppingCart> {
-    private final Set<Product> products;
+    private final List<Product> products;
 
-    public ShoppingCartTestDataLoader(ShoppingCartRepository shoppingCartRepository, Set<Product> products) {
+    public ShoppingCartTestDataLoader(ShoppingCartRepository shoppingCartRepository, List<Product> products) {
         super(shoppingCartRepository);
         validateEntities(products);
         this.products = products;

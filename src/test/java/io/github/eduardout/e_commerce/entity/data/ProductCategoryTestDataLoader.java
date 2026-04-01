@@ -11,7 +11,7 @@ public class ProductCategoryTestDataLoader extends TestDataLoader<ProductCategor
         super(productCategoryRepository);
     }
 
-    public static ProductCategory findProductCategory(Set<ProductCategory> productCategories, String name) {
+    public static ProductCategory findProductCategory(List<ProductCategory> productCategories, String name) {
         return productCategories.stream()
                 .filter(productCategory -> productCategory.getName().equals(name)
                         && productCategory.getId() != null)
