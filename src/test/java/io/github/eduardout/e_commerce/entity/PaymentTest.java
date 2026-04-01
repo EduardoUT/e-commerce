@@ -5,7 +5,6 @@ import io.github.eduardout.e_commerce.entity.data.PaymentTestDataLoader;
 import io.github.eduardout.e_commerce.entity.data.builder.Payments;
 import io.github.eduardout.e_commerce.repository.CustomerRepository;
 import io.github.eduardout.e_commerce.repository.PaymentRepository;
-import io.github.eduardout.e_commerce.util.PaymentStatus;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +12,7 @@ import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
 import org.springframework.dao.DataIntegrityViolationException;
 
-import java.math.BigDecimal;
 import java.util.List;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -27,7 +24,6 @@ class PaymentTest {
     @Autowired
     private CustomerRepository customerRepository;
     private Customer customer;
-    private Set<Payment> payments;
 
     private void setUpCustomer() {
         CustomerTestDataLoader customerTestDataLoader = new CustomerTestDataLoader(customerRepository);
@@ -40,7 +36,7 @@ class PaymentTest {
     private void setUpPayments() {
         setUpCustomer();
         PaymentTestDataLoader paymentTestDataLoader = new PaymentTestDataLoader(paymentRepository, customer);
-        payments = paymentTestDataLoader.setUp();
+        paymentTestDataLoader.setUp();
     }
 
     @Nested
