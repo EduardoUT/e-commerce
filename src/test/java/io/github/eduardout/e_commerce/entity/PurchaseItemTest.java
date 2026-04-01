@@ -15,7 +15,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -36,8 +35,8 @@ class PurchaseItemTest {
     private Session session;
     private Integer quantity;
     private Customer customer;
-    private Set<Product> products;
-    private Set<Purchase> purchases;
+    private List<Product> products;
+    private List<Purchase> purchases;
 
     @BeforeEach
     void setUp() {
@@ -68,7 +67,7 @@ class PurchaseItemTest {
         purchases = purchaseTestDataLoader.setUp();
     }
 
-    private Purchase findFirstPurchase(Set<Purchase> purchases) {
+    private Purchase findFirstPurchase(List<Purchase> purchases) {
         return purchases.stream().findFirst().orElseThrow();
     }
 

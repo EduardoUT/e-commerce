@@ -14,10 +14,7 @@ import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
 import org.springframework.dao.DataIntegrityViolationException;
 
-import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -36,8 +33,8 @@ class PurchaseTest {
     private ProductRepository productRepository;
     @Autowired
     private Session session;
-    private Set<Purchase> purchases;
-    private Set<Product> products;
+    private List<Purchase> purchases;
+    private List<Product> products;
     private Customer customer;
 
     private void setUpProducts() {
@@ -116,7 +113,7 @@ class PurchaseTest {
         @Test
         void testDeletePurchasesByCustomerId() {
             setUpPurchases();
-            Set<Purchase> actualPurchases = purchases;
+            List<Purchase> actualPurchases = purchases;
             Long customerId = customer.getId();
 
             actualPurchases.forEach(purchase -> {

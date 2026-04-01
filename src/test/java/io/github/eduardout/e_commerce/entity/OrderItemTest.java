@@ -12,10 +12,8 @@ import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
 import org.springframework.dao.DataIntegrityViolationException;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -38,9 +36,9 @@ class OrderItemTest {
     private PaymentRepository paymentRepository;
     private Seller seller;
     private Customer customer;
-    private Set<Orders> orders;
-    private Set<Payment> payments;
-    private Set<Product> products;
+    private List<Orders> orders;
+    private List<Payment> payments;
+    private List<Product> products;
 
     private void setUpProducts() {
         ProductCategoryTestDataLoader productCategoryTestDataLoader = new ProductCategoryTestDataLoader(productCategoryRepository);
@@ -81,7 +79,7 @@ class OrderItemTest {
         orders = ordersTestDataLoader.setUp();
     }
 
-    private Orders findFirstOrderTest(Set<Orders> orders) {
+    private Orders findFirstOrderTest(List<Orders> orders) {
         return orders
                 .stream()
                 .findFirst()

@@ -31,11 +31,7 @@ class CustomerTest {
     @Autowired
     private PurchaseRepository purchaseRepository;
     @Autowired
-    private PurchaseItemRepository purchaseItemRepository;
-    @Autowired
     private OrdersRepository ordersRepository;
-    @Autowired
-    private OrderItemRepository orderItemRepository;
     @Autowired
     private ProductCategoryRepository productCategoryRepository;
     @Autowired
@@ -46,10 +42,10 @@ class CustomerTest {
     private SellerRepository sellerRepository;
     @Autowired
     private Session session;
-    private Set<Orders> orders;
-    private Set<Product> products;
-    private Set<Payment> payments;
-    private Set<Purchase> purchases;
+    private List<Orders> orders;
+    private List<Product> products;
+    private List<Payment> payments;
+    private List<Purchase> purchases;
     private Customer customer;
     private Seller seller;
     private ShoppingCart shoppingCart;
@@ -227,7 +223,7 @@ class CustomerTest {
         void testUniquePaymentAssociation() {
             setUpPayments();
 
-            Set<Payment> actualPayments = payments;
+            List<Payment> actualPayments = payments;
             Payment actualPayment = actualPayments.stream().findFirst().orElseThrow();
 
             Customer unexpectedCustomer = Customers.aCustomer()
@@ -246,7 +242,7 @@ class CustomerTest {
         @Test
         void testUniquePurchaseAssociation() {
             setUpPurchases();
-            Set<Purchase> actualPurchases = purchases;
+            List<Purchase> actualPurchases = purchases;
             Purchase actualPurchase = actualPurchases.stream().findFirst().orElseThrow();
 
             Customer unexpectedCustomer = Customers.aCustomer()

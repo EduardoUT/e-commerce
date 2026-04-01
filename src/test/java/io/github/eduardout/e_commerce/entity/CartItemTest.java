@@ -18,7 +18,6 @@ import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabas
 import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.List;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -50,7 +49,7 @@ class CartItemTest {
                 productCategoryTestDataLoader.setUp()
         );
 
-        Set<Product> products = productTestDataLoader.setUp();
+        List<Product> products = productTestDataLoader.setUp();
         ShoppingCartTestDataLoader shoppingCartTestDataLoader = new ShoppingCartTestDataLoader(
                 shoppingCartRepository,
                 products
@@ -130,7 +129,7 @@ class CartItemTest {
         void testDeleteByShoppingCartId() {
             ShoppingCart actualShoppingCart = shoppingCart;
             Long shoppingCartId = actualShoppingCart.getId();
-            Set<CartItem> cartItems = actualShoppingCart.getCartItems();
+            List<CartItem> cartItems = actualShoppingCart.getCartItems();
 
             cartItems.forEach(cartItem -> cartItemRepository.deleteByShoppingCartId(shoppingCartId));
 

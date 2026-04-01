@@ -15,7 +15,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -31,7 +30,7 @@ class ShoppingCartTest {
     @Autowired
     private ProductRepository productRepository;
     private ShoppingCart shoppingCart;
-    private Set<Product> products;
+    private List<Product> products;
 
     private void setUpProducts() {
         ProductCategoryTestDataLoader productCategoryTestDataLoader = new ProductCategoryTestDataLoader(productCategoryRepository);

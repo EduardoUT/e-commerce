@@ -3,7 +3,6 @@ package io.github.eduardout.e_commerce.entity;
 import io.github.eduardout.e_commerce.entity.data.*;
 import io.github.eduardout.e_commerce.entity.data.builder.OrdersTestBuilder;
 import io.github.eduardout.e_commerce.repository.*;
-import io.github.eduardout.e_commerce.util.OrderStatus;
 import org.hibernate.Session;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -13,10 +12,7 @@ import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
 import org.springframework.dao.DataIntegrityViolationException;
 
-import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -41,9 +37,9 @@ class OrdersTest {
     private Session session;
     private Customer customer;
     private Seller seller;
-    private Set<Orders> orders;
-    private Set<Payment> payments;
-    private Set<Product> products;
+    private List<Orders> orders;
+    private List<Payment> payments;
+    private List<Product> products;
 
     @BeforeEach
     void beforeEach() {
@@ -178,7 +174,7 @@ class OrdersTest {
         void testDeleteOrdersByCustomerId() {
             setUpOrders();
             Long customerId = customer.getId();
-            Set<Orders> actualOrders = orders;
+            List<Orders> actualOrders = orders;
             actualOrders.forEach(order -> orderItemRepository.deleteByOrderId(order.getId()));
             ordersRepository.deleteByCustomerId(customerId);
             List<Orders> unexpectedOrders = ordersRepository.findAllByCustomerId(customerId);
