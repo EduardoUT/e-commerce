@@ -35,3 +35,4 @@ build/
 ### Project properties ###
 /src/main/resources/application-dev.yaml
 /src/test/resources/application-test.yaml
+/src/test/resources/certificate.p12
